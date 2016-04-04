@@ -1,7 +1,7 @@
 %upload the data file
 load('ad_data.mat');
 %define the vector of regularization parameter par of logistic regression
-par = [1e-8 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1];
+par = [1e-8 0.01 0.02 0.05 0.1 0.2];
 %initial output: numNonZeroFeature, accuracy
 %initial count of correct prediction
 count = zeros(size(par));
@@ -13,7 +13,7 @@ train_label = y_train;
 test_data = X_test;
 test_label = y_test;
 %add constant 1 to the last column of the test_data
-num_x_test = size(test_label);
+num_x_test = size(test_data,1);
 constant_test = ones(num_x_test,1);
 test_data = [test_data, constant_test];
 num_label = length(test_label);
