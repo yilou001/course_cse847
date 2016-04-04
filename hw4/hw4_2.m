@@ -17,6 +17,7 @@ num_x_test = size(test_data,1);
 constant_test = ones(num_x_test,1);
 test_data = [test_data, constant_test];
 num_label = length(test_label);
+AUC = zeros(length(par),1);
 
 for i = 1:length(par)
     %logistic regression with regularization parameter
@@ -24,28 +25,29 @@ for i = 1:length(par)
     weight = [w;c];
     %predict using the resulted weight from logistic regression      
     pred = 1.0 ./(1.0+exp(-test_data * weight));
+    %AUC
+    [X,Y,T,AUC(i)] = perfcurve(test_label,pred, '1');
     %convert the predict to 1 or 1 based on the threshold 0.5
-    for j = 1:num_label
-       if pred(j) >= 0.5
-           pred(j) = 1;
-       else
-           pred(j) = -1;
-       end
-       if pred(j) == test_label(j)
-          count(i) = count(i) + 1;
-       end
-    end
+    %for j = 1:num_label
+     %  if pred(j) >= 0.5
+      %     pred(j) = 1;
+       %else
+        %   pred(j) = -1;
+       %end
+       %if pred(j) == test_label(j)
+        %  count(i) = count(i) + 1;
+       %end
+    %end
     %output: numNonZeroFeature and accuracy of the prediction
     numNonZeroFeature(i) = sum(weight~=0);
-    accuracy(i) =  count(i) / num_label;
+    %accuracy(i) =  count(i) / num_label;
     
 end
 
-
-plot(par,accuracy, 'b*');
+plot(par,AUC, 'b*');
 xlabel('lamda');
-ylabel('accuracy');
-title('Accuracy of prediction vs lamda');
+ylabel('AUC');
+title('AUC vs lamda');
 hold on
 figure();
 plot(par,numNonZeroFeature, 'r<');
